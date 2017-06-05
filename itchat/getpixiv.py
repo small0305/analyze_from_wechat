@@ -7,6 +7,9 @@ Created on Wed May 31 16:20:34 2017
 
 import re   
 import requests
+import datetime
+import os,os.path
+
 
 def log_in(username,password):
     data = {
@@ -68,3 +71,17 @@ def save_pics(dir_path,ID,p):
         print('connectionerror')
     return(dir_path+'\\'+ID+'.jpg')
 
+def sendpixiv(msg,username,password):
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    if(os.path.exists(today)):
+        print("exists")
+    else:
+        os.mkdir(today)
+    
+    p = log_in(username,password)
+    pic_IDs = get_pic_IDs(p)
+    for ID in pic_IDs[1:10]:
+        pic_path = save_pics(today,ID,p)
+        if os.path.exists(pic_path):
+#            msg.user.send("https://www.pixiv.net/member_illust.php?mode=medium&illust_id="+ID)
+            msg.user.send('@img@%s' % pic_path)
