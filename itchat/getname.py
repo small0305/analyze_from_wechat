@@ -11,6 +11,7 @@ from itchat.content import *
 from getweather import *
 from textanalyze import *
 from secret import *
+from reply import *
 
 #msgs = []
 def log_in():
@@ -26,17 +27,18 @@ def get_chatroom(NAME):
 
 @itchat.msg_register(TEXT,isFriendChat=True, isGroupChat=False)
 def text_reply(msg):
-    msgs.append(msg)
+    reply_text = reply(msg.text)
+    if reply_text and msg['ToUserName']!=msg['User']['UserName']:
+        msg.user.send(reply_text)
     if msg.text=="P":
-        print("PPP")
         sendpixiv(msg,username,password)
-    if '啪' in msg.text:
-        msg.user.send( msg.text.count('啪')*'[捂脸]')
+        return
     if 'cloud' in msg.text:
         print('drawing')
         print(len(msgs))
         text_analyze(msg,msgs)
         msg.user.send('@img@%s' % 'cloud.jpg')
+        return
     if '天气' in msg.text:
         city = msg.text.split('天气')[0]        
         if city == '':
@@ -47,6 +49,8 @@ def text_reply(msg):
                 msg.user.send(s)
             except KeyError:
                 print('invalid input')
+        return
+    msgs.append(msg)
 
 log_in()
 
