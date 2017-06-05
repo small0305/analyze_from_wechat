@@ -11,6 +11,7 @@ from wordcloud import WordCloud, ImageColorGenerator
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
+import re
 
 
 def get_keywords_from_text(text, n=200):
@@ -48,7 +49,13 @@ def text_analyze(msg_now,msgs):
     text = ''
     for msg in msgs:
         if msg['User']['NickName']==nickname:
-            text+=msg['Text']
+            t_now = msg['Text']
+            t_now = re.sub('\d','',t_now)
+            t_now = re.sub('cloud','',t_now)
+            if 'http' not in t_now and len(t_now)<300:
+                text+=t_now+' '
+
+            
     print(text)
     pic_path = 'test.jpg'
     freq = dict(get_keywords_from_text(text))
