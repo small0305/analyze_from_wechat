@@ -37,6 +37,7 @@ def draw_pic_with_frequences(frequences, pic_path, maxfontsize=800, fontpath='MS
                    max_font_size=maxfontsize, random_state=21, font_path=fontpath)
     wc.fit_words(frequences)
     image_colors = ImageColorGenerator(mask_pic)
+    plt.figure()
     plt.axis("off")
     plt.imshow(wc.recolor(color_func=image_colors))
     plt.savefig('cloud.jpg',bbox_inches='tight',pad_inches=0,dpi = 300)
@@ -52,14 +53,16 @@ def text_analyze(msg_now,msgs):
             t_now = msg['Text']
             t_now = re.sub('\d','',t_now)
             t_now = re.sub('cloud','',t_now)
+            t_now = re.sub('啪','',t_now)
             if 'http' not in t_now and len(t_now)<300:
-                text+=t_now+' '
-
-            
+                text+=t_now+' '            
     print(text)
     pic_path = 'test.jpg'
     freq = dict(get_keywords_from_text(text))
-    freq['cloud'] = 0
+    freq['cloud'] = 0.0001
+    freq['哈哈'] += freq['哈哈哈']+freq['哈哈哈哈']
+    freq['哈哈哈'] = 0.0001
+    freq['哈哈哈哈'] = 0.0001
     draw_pic_with_frequences(freq, pic_path)
 
 

@@ -73,15 +73,26 @@ def save_pics(dir_path,ID,p):
 
 def sendpixiv(msg,username,password):
     today = datetime.date.today().strftime("%Y-%m-%d")
+    yesterday = (datetime.date.today()-datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+
     if(os.path.exists(today)):
         print("exists")
     else:
         os.mkdir(today)
-    
+        
     p = log_in(username,password)
     pic_IDs = get_pic_IDs(p)
-    for ID in pic_IDs[1:10]:
+    pic_no = 0
+    for ID in pic_IDs:
+        pic_path1 = today+'\\'+ID+'.jpg'
+        pic_path2 = yesterday+'\\'+ID+'.jpg'
+        if os.path.exists(pic_path1) or os.path.exists(pic_path2):
+            print('pass')
+            continue
         pic_path = save_pics(today,ID,p)
         if os.path.exists(pic_path):
 #            msg.user.send("https://www.pixiv.net/member_illust.php?mode=medium&illust_id="+ID)
             msg.user.send('@img@%s' % pic_path)
+            pic_no += 1
+        if pic_no >=5:
+            break

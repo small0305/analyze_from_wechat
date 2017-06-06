@@ -30,6 +30,7 @@ def text_reply(msg):
     reply_text = reply(msg.text)
     if reply_text and msg['ToUserName']!=msg['User']['UserName']:
         msg.user.send(reply_text)
+        return
     if msg.text=="P":
         sendpixiv(msg,username,password)
         return
